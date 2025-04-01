@@ -1,6 +1,13 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from 'sonner';
+import { 
+  signInWithPopup, 
+  signOut as firebaseSignOut,
+  onAuthStateChanged,
+  User as FirebaseUser
+} from 'firebase/auth';
+import { auth, googleProvider } from '@/lib/firebase';
 
 interface User {
   uid: string;
@@ -22,38 +29,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Check for saved user data on component mount
   useEffect(() => {
-    const savedUser = localStorage.getItem('mindfulai_user');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        console.error('Failed to parse saved user:', error);
-        localStorage.removeItem('mindfulai_user');
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        // Convert Firebase user to our User type
+        const appUser: User = {
+          uid: firebaseUser.uid,
+          displayName: firebaseUser.displayName,
+          email: firebaseUser.email,
+          photoURL: firebaseUser.photoURL
+        };
+        setUser(appUser);
+      } else {
+        setUser(null);
       }
-    }
-    setLoading(false);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  // In a real app, this would use Firebase Authentication
-  // For this demo, we're simulating Google Auth
   const signIn = async () => {
     setLoading(true);
     try {
-      // Simulate Google sign-in delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Create a mock user
-      const mockUser: User = {
-        uid: 'mock-uid-' + Math.random().toString(36).substr(2, 9),
-        displayName: 'Demo User',
-        email: 'demo@example.com',
-        photoURL: 'https://ui-avatars.com/api/?name=Demo+User&background=0D8ABC&color=fff',
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem('mindfulai_user', JSON.stringify(mockUser));
+      const result = await signInWithPopup(auth, googleProvider);
       toast.success('Signed in successfully');
     } catch (error) {
       console.error('Error signing in:', error);
@@ -66,11 +65,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const signOut = async () => {
     setLoading(true);
     try {
-      // Simulate sign-out delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setUser(null);
-      localStorage.removeItem('mindfulai_user');
+      await firebaseSignOut(auth);
       toast.success('Signed out successfully');
     } catch (error) {
       console.error('Error signing out:', error);

@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -7,6 +6,7 @@ import MessageBubble from './MessageBubble';
 import LanguageSelector from './LanguageSelector';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
+import { generateAIResponse } from '@/lib/openai';
 
 interface Message {
   id: string;
@@ -65,9 +65,8 @@ const ChatInterface = () => {
     setIsProcessing(true);
 
     try {
-      // In a real app, this would call OpenAI's API
-      // For demo purposes, we'll simulate a response
-      const response = await simulateAIResponse(inputValue, language);
+      // Call OpenAI API to get AI response
+      const response = await generateAIResponse(inputValue, language);
       
       // Add AI response
       addMessage(response, 'ai');
@@ -75,50 +74,12 @@ const ChatInterface = () => {
       console.error('Error getting AI response:', error);
       toast({
         title: "Error",
-        description: "Failed to get response. Please try again.",
+        description: "Failed to get response from the AI. Please try again.",
         variant: "destructive"
       });
     } finally {
       setIsProcessing(false);
     }
-  };
-
-  // This function simulates an AI response for demo purposes
-  // In a real app, you would call OpenAI's API here
-  const simulateAIResponse = async (message: string, lang: string): Promise<string> => {
-    // Simulate API latency
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const responses: Record<string, string[]> = {
-      'en': [
-        "Thank you for sharing that. How long have you been feeling this way?",
-        "I understand this can be difficult. Can you tell me more about what's been happening?",
-        "It sounds like you're going through a challenging time. What coping strategies have helped you in the past?",
-        "Your feelings are valid. Let's explore some ways to address this together.",
-        "I'm here to support you. Have you considered talking to a professional therapist about these concerns?",
-      ],
-      'es': [
-        "Gracias por compartir eso. ¿Cuánto tiempo has estado sintiéndote así?",
-        "Entiendo que esto puede ser difícil. ¿Puedes contarme más sobre lo que ha estado pasando?",
-        "Parece que estás pasando por un momento difícil. ¿Qué estrategias de afrontamiento te han ayudado en el pasado?",
-        "Tus sentimientos son válidos. Exploremos juntos algunas formas de abordar esto.",
-        "Estoy aquí para apoyarte. ¿Has considerado hablar con un terapeuta profesional sobre estas preocupaciones?"
-      ],
-      'fr': [
-        "Merci de partager cela. Depuis combien de temps vous sentez-vous ainsi?",
-        "Je comprends que cela peut être difficile. Pouvez-vous m'en dire plus sur ce qui s'est passé?",
-        "Il semble que vous traversiez une période difficile. Quelles stratégies d'adaptation vous ont aidé dans le passé?",
-        "Vos sentiments sont valides. Explorons ensemble quelques façons d'aborder cela.",
-        "Je suis là pour vous soutenir. Avez-vous envisagé de parler à un thérapeute professionnel de ces préoccupations?"
-      ]
-    };
-    
-    // Default to English if the language is not supported in our demo
-    const availableResponses = responses[lang] || responses['en'];
-    
-    // Choose a random response
-    const randomIndex = Math.floor(Math.random() * availableResponses.length);
-    return availableResponses[randomIndex];
   };
 
   const handlePromptClick = (prompt: string) => {
