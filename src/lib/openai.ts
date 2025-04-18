@@ -1,10 +1,9 @@
-
 // Gemini API integration
 export const generateAIResponse = async (
   message: string, 
   language: string
 ): Promise<string> => {
-  const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "YOUR_GEMINI_API_KEY";
+  const GEMINI_API_KEY = "PASTE_YOUR_GEMINI_API_KEY_HERE";
   
   if (!GEMINI_API_KEY) {
     throw new Error("Gemini API key is missing");
