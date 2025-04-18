@@ -4,12 +4,12 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "PASTE_YOUR_FIREBASE_API_KEY_HERE",
-  authDomain: "PASTE_YOUR_FIREBASE_AUTH_DOMAIN_HERE",
-  projectId: "PASTE_YOUR_FIREBASE_PROJECT_ID_HERE",
-  storageBucket: "PASTE_YOUR_FIREBASE_STORAGE_BUCKET_HERE",
-  messagingSenderId: "PASTE_YOUR_FIREBASE_MESSAGING_SENDER_ID_HERE",
-  appId: "PASTE_YOUR_FIREBASE_APP_ID_HERE"
+  apiKey: "AIzaSyABx1udym6Jv6x_jCVLw4zY6nCSBFREWbI",
+  authDomain: "therapy-webapp-be11e.firebaseapp.com",
+  projectId: "therapy-webapp-be11e",
+  storageBucket: "therapy-webapp-be11e.firebasestorage.app",
+  messagingSenderId: "712697750681",
+  appId: "1:712697750681:web:77be4449a2e14d30988408"
 };
 
 // Initialize Firebase
