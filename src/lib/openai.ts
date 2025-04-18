@@ -3,7 +3,7 @@ export const generateAIResponse = async (
   message: string, 
   language: string
 ): Promise<string> => {
-  const GEMINI_API_KEY = "PASTE_YOUR_GEMINI_API_KEY_HERE";
+  const GEMINI_API_KEY = "AIzaSyAXwg6h-D0AyPRm0mZmCKay_P1WMhIU_Nw";
   
   if (!GEMINI_API_KEY) {
     throw new Error("Gemini API key is missing");
