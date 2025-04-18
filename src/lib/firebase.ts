@@ -17,4 +17,11 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
+// Add error handling for authentication
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    console.log('User is signed in:', user.displayName);
+  }
+});
+
 export { auth, googleProvider };
